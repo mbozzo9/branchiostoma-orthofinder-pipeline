@@ -25,6 +25,7 @@ conda activate orthofinder_env
 ```bash
 python ortholog_pipeline_zenodo.py --step all
 ```
+
 ## How to cite this pipeline
 If you use this pipeline in your research, please cite:
 - This repository: https://github.com/bozzom9/branchiostoma-orthofinder-pipeline
@@ -34,3 +35,30 @@ If you use this pipeline, please cite:
 - Emms D.M. et al. (2025). OrthoFinder. bioRxiv https://doi.org/10.1101/2025.07.15.664860
 - Emms D.M. & Kelly S. (2019). Genome Biology 20:238.
 - Buchfink B. et al. (2015). Nature Methods 12:59-60.
+
+## Extended annotation pipeline (v1.1)
+
+In addition to OrthoFinder ortholog inference, the pipeline now includes
+a Swiss-Prot homology search for genes without a human ortholog.
+
+### Additional scripts
+
+- `build_NP_mapping.py` — builds NP_ accession → gene symbol mapping from NCBI files
+- `annotate_unannotated.py` — runs DIAMOND blastp against Swiss-Prot for unannotated genes
+- `merge_annotations_v2.py` — merges OrthoFinder and Swiss-Prot annotations into a single file
+- `add_gene_names_v2.py` — adds gene_name and annotation_source columns to count matrices
+
+### Annotation results (B. lanceolatum klBraLanc5.hap2)
+
+| Source | Genes | % |
+|--------|-------|---|
+| OrthoFinder (human ortholog) | 11,961 | 49.0% |
+| Swiss-Prot homolog (metazoa) | 5,717 | 23.4% |
+| Unknown | 6,745 | 27.6% |
+| **Total** | **24,423** | **100%** |
+
+### annotation_source column
+Output files include an `annotation_source` column indicating the origin:
+- `OrthoFinder` — formal human ortholog inferred by OrthoFinder
+- `SwissProt_homolog` — best homolog from metazoa via DIAMOND vs Swiss-Prot
+- `unknown` — no annotation found
